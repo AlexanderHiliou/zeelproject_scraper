@@ -1,3 +1,10 @@
+import os
+import ast
+
+from dotenv import load_dotenv
+
+from interface import UserInterface
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -5,9 +12,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-import ast
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -24,8 +28,7 @@ class Scraper:
 
     def wait_and_find_element(self, xpath, value_to_insert=False):
         WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, f'{xpath}'))
-        )
+            EC.presence_of_element_located((By.XPATH, f'{xpath}')))
         if value_to_insert:
             self.driver.find_element(
                 By.XPATH, f'{xpath}').send_keys(value_to_insert)
@@ -65,9 +68,11 @@ class ZeelProject(Scraper):
 
 
 if __name__ == '__main__':
-    for k, v in accounts.items():
-        proj = ZeelProject(
-            'https://zeelproject.com/ru/32623-coffee-table-heritage.html', k, v)
+    UserInterface().run()
+    with open('links.txt', 'r') as file:
+        model = file.read()
+    for email, password in accounts.items():
+        proj = ZeelProject(f'{model}', email, password)
         proj.login()
         if proj.download():
             break
