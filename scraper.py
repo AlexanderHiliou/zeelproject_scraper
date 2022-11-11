@@ -1,9 +1,10 @@
 import os
+
 import ast
 
 from dotenv import load_dotenv
 
-from interface import UserInterface
+from interface import UserInterface, file_cleaner
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -75,4 +76,5 @@ if __name__ == '__main__':
         proj = ZeelProject(f'{model}', email, password)
         proj.login()
         if proj.download():
+            file_cleaner('links.txt')
             break
